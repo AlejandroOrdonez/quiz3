@@ -39,6 +39,25 @@ exports.answer = function(req,res){
 	})
 };
 
+//GET /author
 exports.author = function(req,res){
 	res.render('author',{author:'Victor Alejandro Ordoñez'});
-}
+};
+
+//GET /quizes/search
+exports.search = function(req,res){
+	res.render('quizes/search',{author:'Victor Alejandro Ordoñez'});
+};
+
+//GET /quizes/resultado
+exports.searchResult = function(req,res){
+	var buscado = '%'+req.query.search+'%';
+	buscado = buscado.replace(' ','%');
+	models.Quiz.findAll({where:["pregunta like ?", buscado]}).then(function(quizes){
+		if(quizes.length){
+			res.render('quizes/resultado',{quizes: quizes});
+		}else{
+			res.render('quizes/mensaje',{Mensaje: req.query.search});
+		}
+	});
+};
